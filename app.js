@@ -1,13 +1,24 @@
-let position = 0;
-let wordLimit = 5;
-let answer = '';
-let isGameOver = false;
+const colors = {
+  white: '#FFFFFF',
+  black: '#000000',
+  green: '#6AA964',
+  yellow: '#C9B458',
+  gray: '#787C7E',
+  ltgray: '#D3D6DA',
+};
+
 const ANSWER_URL = 'https://words.dev-apis.com/word-of-the-day';
 const VALID_URL = 'https://words.dev-apis.com/validate-word';
 
 const letters = document.querySelectorAll('.letter');
 const spinner = document.querySelector('.spinner');
 
+let position = 0;
+let wordLimit = 5;
+let answer = '';
+let isGameOver = false;
+
+// async/await functions
 // GET the answer of the day from the server
 async function getAnswer() {
   try {
@@ -42,6 +53,56 @@ async function validateWord(guess) {
   }
 }
 
+// Helper functions
+// Set loading icon visible or hidden depending on AJAX request
+function setLoading(isLoading) {
+  isLoading ? spinner.style.visibility = 'visible' : spinner.style.visibility = 'hidden';
+}
+
+// Check if key.event is a letter
+function isLetter(letter) {
+  return /^[a-zA-Z]$/.test(letter);
+}
+
+// Add letter to current word up to the limit
+function addLetter(letter) {
+  if (position < wordLimit && position < 30) {
+    letters[position].innerText = letter;
+    letters[position].style.borderColor = colors.gray;
+    position++;
+  }
+}
+
+// Delete the last letter from current word
+function deleteLetter(letter) {
+  if (isGameOver) {
+    return;
+  }
+  else if (position > wordLimit - 5) {
+    letters[position - 1].innerText = '';
+    letters[position - 1].style.borderColor = colors.ltgray;
+    position--;
+  } else {
+    letters[position].innerText = '';
+    letters[position].style.borderColor = colors.ltgray;
+  }
+}
+
+// Make a map out of an array of letters
+function makeMap(array) {
+  const obj = {};
+  for (let i = 0; i < array.length; i++) {
+    const letter = array[i];
+    if (obj[letter]) {
+      obj[letter]++;
+    } else {
+      obj[letter] = 1;
+    }
+  }
+  return obj;
+}
+
+// Main functions
 // Everytime user presses enter, check to see if word is correct, wrong, or valid
 async function checkWord() {
   // word is all filled up
@@ -60,14 +121,20 @@ async function checkWord() {
       let j = 0;
       for (let i = position - 5; i < wordLimit; i++) {
         if (answer.includes(guess[j]) && answerMap[guess[j]] != 0) {
-          letters[i].style.backgroundColor = '#B59F3B';
+          letters[i].style.backgroundColor = colors.yellow;
+          letters[i].style.borderColor = colors.yellow;
+          letters[i].style.color = colors.white;
           answerMap[guess[j]]--;
           if (guess[j] === answer[j]) {
-            letters[i].style.backgroundColor = '#538D4D';
+            letters[i].style.backgroundColor = colors.green;
+            letters[i].style.color = colors.white;
+            letters[i].style.borderColor = colors.green;
             answerMap[guess[j]]--;
           }
         } else {
-          letters[i].style.backgroundColor = '#3A3A3B';
+          letters[i].style.backgroundColor = colors.gray;
+          letters[i].style.borderColor = colors.gray;
+          letters[i].style.color = colors.white;
         }
         j++;
       }
@@ -124,52 +191,3 @@ async function init() {
 }
 
 init();
-
-// Helper functions
-
-// Set loading icon visible or hidden depending on AJAX request
-function setLoading(isLoading) {
-  isLoading ? spinner.style.visibility = 'visible' : spinner.style.visibility = 'hidden';
-}
-
-// Check if key.event is a letter
-function isLetter(letter) {
-  return /^[a-zA-Z]$/.test(letter);
-}
-
-// Add letter to current word up to the limit
-function addLetter(letter) {
-  if (position < wordLimit && position < 30) {
-    letters[position].innerText = letter;
-    position++;
-  }
-}
-
-// Delete the last letter from current word
-function deleteLetter(letter) {
-  if (isGameOver) {
-    return;
-  }
-  else if (position > wordLimit - 5) {
-    letters[position - 1].innerText = '';
-    position--;
-  } else {
-    letters[position].innerText = '';
-  }
-}
-
-// Make a map out of an array of letters
-function makeMap(array) {
-  const obj = {};
-  for (let i = 0; i < array.length; i++) {
-    const letter = array[i];
-    if (obj[letter]) {
-      obj[letter]++;
-    } else {
-      obj[letter] = 1;
-    }
-  }
-  return obj;
-}
-
-

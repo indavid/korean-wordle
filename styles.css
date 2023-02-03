@@ -1,24 +1,71 @@
-* {
+@import url('https://fonts.googleapis.com/css2?family=Black+Han+Sans&family=Noto+Serif+KR:wght@900&family=Ultra&display=swap');
+
+:root {
+  --white: #FFFFFF;
+  --black: #000000;
+  --green: #6AA964;
+  --yellow: #C9B458;
+  --gray: #787C7E;
+  --ltgray: #D3D6DA;
+  --font-size: 1rem;
+  --serif: 'Ultra', 'Noto Serif KR', "Times New Roman", serif;
+  --sans: "Helvetica Neue", "Helvetica", "Arial", sans-serif;
+}
+
+html {
   box-sizing: border-box;
+}
+
+*,
+*::before,
+*::after {
+  box-sizing: inherit;
 }
 
 body {
   padding: 0;
   margin: 0;
-  font-family: Arial, Helvetica, sans-serif;
-  font-size: 16px;
-  background-color: #121214;
+  font-family: var(--sans);
+  background-color: var(--white);
+  font-size: var(--font-size);
 }
 
-.header {
-  text-align: center;
-  max-width: 500px;
-  width: 100%;
-  margin: 0 auto;
-  padding: 50px 0;
-  border-bottom: 1px solid rgb(85, 85, 85);
-  color: #D7DADC;
-  text-transform: uppercase;
+/** Nav Styles **/
+header {
+  display: flex;
+  flex-direction: row;
+  flex-wrap: nowrap;
+  justify-content: space-between;
+  align-items: center;
+  padding: 0 2rem;
+  border: 1px solid var(--ltgray);
+}
+
+header h1 {
+  font-family: var(--serif);
+  font-weight: 1200;
+  justify-self: center;
+}
+
+header span {
+  font-size: 200%;
+}
+
+header .left-icons {
+  width: 6rem;
+}
+
+header .right-icons {
+  display: flex;
+  justify-content: flex-end;
+  gap: 1rem;
+  width: 6rem;
+}
+
+button {
+  border: none;
+  margin: 0;
+  padding: 0;
 }
 
 .game-status {
@@ -44,7 +91,6 @@ body {
 .word {
   display: flex;
   column-gap: 10px;
-
   margin: 0 auto;
   margin-bottom: 10px;
   width: 100%;
@@ -54,14 +100,14 @@ body {
 .letter {
   width: 60px;
   height: 60px;
-  border: 2px solid #3A3A3B;
+  border: 2px solid var(--ltgray);
   font-weight: bold;
   text-transform: uppercase;
   font-size: 30px;
   display: flex;
   align-items: center;
   justify-content: center;
-  color: white;
+  color: var(--black)
 }
 
 @keyframes blink {
