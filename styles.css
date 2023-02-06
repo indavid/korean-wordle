@@ -116,5 +116,43 @@ button {
   }
 }
 
-/** Confetti for later **/
+/** Styles for keyboard **/
+#keyboard {
+  display: flex;
+  flex-wrap: wrap;
+  max-width: 550px;
+  margin: 4rem auto 2rem;
+}
 
+.row {
+  display: flex;
+  justify-content: center;
+  width: 100%;
+  gap: 0.3rem;
+  margin-bottom: 0.3rem;
+}
+
+.key {
+  width: calc(76.5% / 10);
+  height: 58px;
+  background-color: var(--ltgray);
+  color: var(--black);
+  border-radius: 5px;
+  font-size: 1rem;
+  font-family: vars(--sans);
+  font-weight: bold;
+  text-align: center;
+}
+
+.func {
+  width: calc(76.5% / 7);
+  font-size: 0.7rem;
+}
+
+.key span {
+  font-size: 1.3rem;
+}
+
+.key:hover {
+  cursor: pointer;
+}

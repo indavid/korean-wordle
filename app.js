@@ -1,17 +1,9 @@
-const colors = {
-  white: '#FFFFFF',
-  black: '#000000',
-  green: '#6AA964',
-  yellow: '#C9B458',
-  gray: '#787C7E',
-  ltgray: '#D3D6DA',
-};
-
 const ANSWER_URL = 'https://words.dev-apis.com/word-of-the-day';
 const VALID_URL = 'https://words.dev-apis.com/validate-word';
 
 const letters = document.querySelectorAll('.letter');
 const spinner = document.querySelector('.spinner');
+const keys = document.querySelectorAll('.key');
 
 let position = 0;
 let wordLimit = 5;
@@ -59,9 +51,50 @@ function setLoading(isLoading) {
   isLoading ? spinner.style.visibility = 'visible' : spinner.style.visibility = 'hidden';
 }
 
-// Check if key.event is a letter
+// Check if key.event is an English letter
 function isLetter(letter) {
   return /^[a-zA-Z]$/.test(letter);
+}
+
+// Check if key.event is a Korean letter
+function isKorean(letter) {
+  const koreanRegex = /[\u3130-\u318F\uAC00-\uD7AF]+/;
+  console.log(letter + " " + koreanRegex.test(letter));
+  return koreanRegex.test(letter);
+}
+
+function convertToKorean(letter) {
+  const englishToKorean = {
+    q: "ㅂ",
+    w: "ㅈ",
+    e: "ㄷ",
+    r: "ㄱ",
+    t: "ㅅ",
+    y: "ㅛ",
+    u: "ㅕ",
+    i: "ㅑ",
+    o: "ㅐ",
+    p: "ㅔ",
+    a: "ㅁ",
+    s: "ㄴ",
+    d: "ㅇ",
+    f: "ㄹ",
+    g: "ㅎ",
+    h: "ㅗ",
+    j: "ㅓ",
+    k: "ㅏ",
+    l: "ㅣ",
+    z: "ㅋ",
+    x: "ㅌ",
+    c: "ㅊ",
+    v: "ㅍ",
+    b: "ㅠ",
+    n: "ㅜ",
+    m: "ㅡ",
+  }
+  if (englishToKorean[letter.toLowerCase()]) {
+    return englishToKorean[letter.toLowerCase()];
+  }
 }
 
 // Add letter to current word up to the limit
@@ -124,13 +157,12 @@ async function checkWord() {
           letters[i].style.backgroundColor = colors.yellow;
           letters[i].style.borderColor = colors.yellow;
           letters[i].style.color = colors.white;
-          answerMap[guess[j]]--;
           if (guess[j] === answer[j]) {
             letters[i].style.backgroundColor = colors.green;
             letters[i].style.color = colors.white;
             letters[i].style.borderColor = colors.green;
-            answerMap[guess[j]]--;
           }
+          answerMap[guess[j]]--;
         } else {
           letters[i].style.backgroundColor = colors.gray;
           letters[i].style.borderColor = colors.gray;
@@ -176,18 +208,35 @@ async function checkWord() {
 
 // Listen for user's keyboard events
 async function init() {
+  // Load Answer from API
   await getAnswer();
+  // Listen to keyboard for user input
   document.body.addEventListener('keydown', function(event) {
     if (event.key === 'Backspace' || event.key === 'Delete') {
       deleteLetter();
     } else if (event.key === 'Enter') {
       checkWord();
-    } else if (isLetter(event.key)) {
+    } else if (isKorean(event.key)) {
       addLetter(event.key);
+    } else if (isLetter(event.key)) {
+      addLetter(convertToKorean(event.key));
     } else {
       event.preventDefault;
     }
-  })
+  });
+  // Listen to keyboard buttons for user input
+  keys.forEach(key => {
+    key.addEventListener('click', () => {
+      if (isKorean(key.innerText)) {
+        addLetter(key.innerText);
+      } else if (key.innerText === 'Enter') {
+        checkWord();
+      } else if (key.innerText === 'Backspace') {
+        deleteLetter();
+      }
+      console.log(`I am the key ${key.innerText}`);
+    });
+  });
 }
 
 init();
