@@ -20,7 +20,7 @@ const colors = {
 const ANSWER_URL = wordOfDay;
 const VALID_URL = validWords;
 const DICT_URL = 'https://krdict.korean.go.kr/api/search';
-const apiKEY = '4E077FD98B47452DBF3F9C9969112E0E';
+const apiKEY = 'A30AE254CC60847049BED156BAD35969';
 
 const letters = document.querySelectorAll('.letter');
 const spinner = document.querySelector('.spinner');
@@ -44,13 +44,18 @@ function getAnswer() {
 
 // Look for the guess in the dictionary to see if it exists
 async function searchWord(guess) {
-  console.log(DICT_URL + `?key=${apiKEY}&type_search=search&part=word&q=${guess}&sort=dict`);
-  const res = await fetch(DICT_URL + `?key=${apiKEY}&type_search=search&part=word&q=${guess}&sort=dict`, {
-    method: 'GET',
-    mode: 'cors',
-  });
-  const response = await res.text();
-  console.log(res);
+  try {
+    console.log(DICT_URL + `?certkey_no=4845&key=${apiKEY}&type_search=search&part=word&q=${guess}&sort=dict`);
+    const res = await fetch(DICT_URL + `?key=${apiKEY}&type_search=search&part=word&q=${guess}&sort=dict`, {
+      method: 'GET',
+      credentials: 'include',
+      mode: 'cors',
+    });
+    const response = await res.text();
+    console.log(res);
+  } catch {
+    console.error('Could not connect');
+  }
 }
 
 // POST method to see if word is an actual 5 letter word
