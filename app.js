@@ -24,8 +24,7 @@ const apiKEY = 'A30AE254CC60847049BED156BAD35969';
 
 const letters = document.querySelectorAll('.letter');
 const spinner = document.querySelector('.spinner');
-const keys = document.querySelectorAll('.key');
-
+const keys = document.querySelectorAll('.key')
 let position = 0;
 let wordLimit = 5;
 let answer = '';
