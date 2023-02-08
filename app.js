@@ -1,5 +1,26 @@
-const ANSWER_URL = 'https://words.dev-apis.com/word-of-the-day';
-const VALID_URL = 'https://words.dev-apis.com/validate-word';
+const wordOfDay = {
+  "word": "ㅅㅏㄱㅗㅏ",
+  "puzzleNumber": 1
+}
+
+const validWords = {
+  "wordList" : ["감자"],
+  "valid": true
+}
+
+const colors = {
+  white: '#FFFFFF',
+  black: '#000000',
+  green: '#6AA964',
+  yellow: '#C9B458',
+  gray: '#787C7E',
+  ltgray: '#D3D6DA',
+};
+
+const ANSWER_URL = wordOfDay;
+const VALID_URL = validWords;
+const DICT_URL = 'https://krdict.korean.go.kr/api/search';
+const apiKEY = '4E077FD98B47452DBF3F9C9969112E0E';
 
 const letters = document.querySelectorAll('.letter');
 const spinner = document.querySelector('.spinner');
@@ -12,34 +33,40 @@ let isGameOver = false;
 
 // async/await functions
 // GET the answer of the day from the server
-async function getAnswer() {
+function getAnswer() {
   try {
-    const response = await fetch(ANSWER_URL);
-    const data = await response.json();
+    answer = ANSWER_URL.word;
     setLoading(false);
-    answer = data.word;
   } catch (error) {
     console.error('Could not get right answer');
   }
 }
 
+// Look for the guess in the dictionary to see if it exists
+async function searchWord(guess) {
+  console.log(DICT_URL + `?key=${apiKEY}&type_search=search&part=word&q=${guess}&sort=dict`);
+  const res = await fetch(DICT_URL + `?key=${apiKEY}&type_search=search&part=word&q=${guess}&sort=dict`, {
+    method: 'GET',
+    mode: 'cors',
+  });
+  const response = await res.text();
+  console.log(res);
+}
+
 // POST method to see if word is an actual 5 letter word
-async function validateWord(guess) {
+ function validateWord(guess) {
   setLoading(true);
   const input = {
     "word": guess
   }
   try {
-    const response = await fetch(VALID_URL, {
-      method: 'POST',
-      headers: {
-        'Content-Type': 'application/json',
-      },
-      body: JSON.stringify(input),
-    });
-    const output = await response.json();
+    const validWords = VALID_URL.wordList;
     setLoading(false);
-    return output.validWord;
+    if (validWords.includes(guess)) {
+      return true;
+    } else {
+      return false;
+    }
   } catch (error) {
     console.error('Could not validate guess');
   }
@@ -59,7 +86,6 @@ function isLetter(letter) {
 // Check if key.event is a Korean letter
 function isKorean(letter) {
   const koreanRegex = /[\u3130-\u318F\uAC00-\uD7AF]+/;
-  console.log(letter + " " + koreanRegex.test(letter));
   return koreanRegex.test(letter);
 }
 
@@ -121,7 +147,7 @@ function deleteLetter(letter) {
   }
 }
 
-// Make a map out of an array of letters
+// Makes an object out of an array of letters and keeps count of how many letters are there
 function makeMap(array) {
   const obj = {};
   for (let i = 0; i < array.length; i++) {
@@ -140,15 +166,19 @@ function makeMap(array) {
 async function checkWord() {
   // word is all filled up
   if (position === wordLimit) {
-    let guess = '';
+    let chars = [];
     // get the guess word
     for (let i = position - 5; i < wordLimit; i++) {
-      guess += letters[i].innerText.toLowerCase();
+      chars.push(letters[i].innerText.toLowerCase());
     }
-    // if guess is a valid word
+    // Use hangul.js from github library (https://github.com/e-/Hangul.js)
+    guess = Hangul.assemble(chars);
+    console.log(guess);
+    searchWord(guess);
+
+    // If guess is a valid word
     console.log(await validateWord(guess));
     if (await validateWord(guess)) {
-      console.log('why am i running');
       // color the letters depending on correctness
       const answerMap = makeMap(answer); // Keep track of letter count
       let j = 0;
@@ -224,7 +254,7 @@ async function init() {
       event.preventDefault;
     }
   });
-  // Listen to keyboard buttons for user input
+  // Listen to the key buttons for user input
   keys.forEach(key => {
     key.addEventListener('click', () => {
       if (isKorean(key.innerText)) {
@@ -233,8 +263,7 @@ async function init() {
         checkWord();
       } else if (key.innerText === 'Backspace') {
         deleteLetter();
-      }
-      console.log(`I am the key ${key.innerText}`);
+      } 
     });
   });
 }
