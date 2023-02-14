@@ -1,13 +1,3 @@
-const wordOfDay = {
-  "word": "ㅅㅏㄱㅗㅏ",
-  "puzzleNumber": 1
-}
-
-const validWords = {
-  "wordList" : ["감자"],
-  "valid": true
-}
-
 const colors = {
   white: '#FFFFFF',
   black: '#000000',
@@ -17,24 +7,20 @@ const colors = {
   ltgray: '#D3D6DA',
 };
 
-const ANSWER_URL = wordOfDay;
-const VALID_URL = validWords;
-const DICT_URL = 'https://krdict.korean.go.kr/api/search';
-const apiKEY = 'A30AE254CC60847049BED156BAD35969';
-
 const letters = document.querySelectorAll('.letter');
 const spinner = document.querySelector('.spinner');
-const keys = document.querySelectorAll('.key')
+const keys = document.querySelectorAll('.key');
+
 let position = 0;
 let wordLimit = 5;
 let answer = '';
 let isGameOver = false;
 
-// async/await functions
-// GET the answer of the day from the server
+// Grab the answer from a random selection from the WordList
 function getAnswer() {
   try {
-    answer = ANSWER_URL.word;
+    answer = wordList[Math.floor(Math.random() * 38,698)];
+    console.log(answer);
     setLoading(false);
   } catch (error) {
     console.error('Could not get right answer');
@@ -42,39 +28,16 @@ function getAnswer() {
 }
 
 // Look for the guess in the dictionary to see if it exists
-async function searchWord(guess) {
-  try {
-    console.log(DICT_URL + `?certkey_no=4845&key=${apiKEY}&type_search=search&part=word&q=${guess}&sort=dict`);
-    const res = await fetch(DICT_URL + `?key=${apiKEY}&type_search=search&part=word&q=${guess}&sort=dict`, {
-      method: 'GET',
-      credentials: 'include',
-      mode: 'cors',
-    });
-    const response = await res.text();
-    console.log(res);
-  } catch {
-    console.error('Could not connect');
-  }
-}
-
-// POST method to see if word is an actual 5 letter word
  function validateWord(guess) {
-  setLoading(true);
-  const input = {
-    "word": guess
-  }
   try {
-    const validWords = VALID_URL.wordList;
+    setLoading(true);
+    const isValid = wordList.includes(guess);
     setLoading(false);
-    if (validWords.includes(guess)) {
-      return true;
-    } else {
-      return false;
-    }
-  } catch (error) {
-    console.error('Could not validate guess');
+    return isValid;
+  } catch {
+    console.error('Could not find word');
   }
-}
+ }
 
 // Helper functions
 // Set loading icon visible or hidden depending on AJAX request
@@ -170,19 +133,17 @@ function makeMap(array) {
 async function checkWord() {
   // word is all filled up
   if (position === wordLimit) {
-    let chars = [];
+    let guess = [];
     // get the guess word
     for (let i = position - 5; i < wordLimit; i++) {
-      chars.push(letters[i].innerText.toLowerCase());
+      guess.push(letters[i].innerText.toLowerCase());
     }
-    // Use hangul.js from github library (https://github.com/e-/Hangul.js)
-    guess = Hangul.assemble(chars);
-    console.log(guess);
-    searchWord(guess);
+    guess = guess.join('');
 
-    // If guess is a valid word
-    console.log(await validateWord(guess));
-    if (await validateWord(guess)) {
+    // If guess is a valid word from the wordLList
+    console.log(guess);
+    console.log(validateWord(guess));
+    if (validateWord(guess)) {
       // color the letters depending on correctness
       const answerMap = makeMap(answer); // Keep track of letter count
       let j = 0;
