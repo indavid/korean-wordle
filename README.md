@@ -6,4 +6,4 @@ Was coded in HTML, CSS, JS.
 
 Was good fun making it, and want to explore possible a Korean version of Wordle or just adding a fun twist to it using a different APIs.
 
-Feel free to play a game on https://indavid.github.io/wordle-clone/
+Feel free to play a game on https://indavid.github.io/korean-wordle/

@@ -224,7 +224,7 @@ async function init() {
     key.addEventListener('click', () => {
       if (isKorean(key.innerText)) {
         addLetter(key.innerText);
-      } else if (key.innerText === 'Enter') {
+      } else if (key.innerText === 'ENTER') {
         checkWord();
       } else if (key.innerText === 'Backspace') {
         deleteLetter();
