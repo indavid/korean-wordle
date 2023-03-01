@@ -1,0 +1,181 @@
+@import "https://fonts.googleapis.com/css2?family=Black+Han+Sans&family=Noto+Serif+KR:wght@900&family=Ultra&display=swap";
+:root {
+  --white: #fff;
+  --black: #000;
+  --green: #6aa964;
+  --yellow: #c9b458;
+  --gray: #787c7e;
+  --ltgray: #d3d6da;
+  --font-size: 1rem;
+  --serif: "Ultra", "Noto Serif KR", "Times New Roman", serif;
+  --sans: "Helvetica Neue", "Helvetica", "Arial", sans-serif;
+}
+
+html {
+  box-sizing: border-box;
+}
+
+*, :before, :after {
+  box-sizing: inherit;
+}
+
+body {
+  font-family: var(--sans);
+  background-color: var(--white);
+  font-size: var(--font-size);
+  margin: 0;
+  padding: 0;
+}
+
+header {
+  border: 1px solid var(--ltgray);
+  flex-flow: row;
+  justify-content: space-between;
+  align-items: center;
+  padding: 0 2rem;
+  display: flex;
+}
+
+header h1 {
+  font-family: var(--serif);
+  justify-self: center;
+  font-size: 1.5rem;
+}
+
+header span {
+  font-size: 200%;
+}
+
+header .left-icons {
+  width: 6rem;
+}
+
+header .fa-solid {
+  background-color: var(--white);
+}
+
+header .right-icons {
+  width: 6rem;
+  background-color: var(--white);
+  justify-content: flex-end;
+  gap: 1rem;
+  display: flex;
+}
+
+button {
+  border: none;
+  margin: 0;
+  padding: 0;
+}
+
+.game-status {
+  justify-content: center;
+  align-items: center;
+  padding: 20px;
+  display: flex;
+}
+
+@keyframes spin {
+  to {
+    transform: rotate(360deg);
+  }
+}
+
+.spinner {
+  color: #fff;
+  visibility: hidden;
+  font-size: 30px;
+  font-weight: bold;
+  animation: .5s linear infinite spin;
+}
+
+.word {
+  width: 100%;
+  max-width: 340px;
+  column-gap: 5px;
+  margin: 0 auto 5px;
+  display: flex;
+}
+
+.letter {
+  width: 60px;
+  height: 60px;
+  border: 2px solid var(--ltgray);
+  text-transform: uppercase;
+  color: var(--black);
+  justify-content: center;
+  align-items: center;
+  font-size: 30px;
+  font-weight: bold;
+  display: flex;
+}
+
+.correct {
+  background-color: var(--green);
+  border-color: var(--green);
+  color: var(--white);
+}
+
+.close {
+  background-color: var(--yellow);
+  border-color: var(--yellow);
+  color: var(--white);
+}
+
+.wrong {
+  background-color: var(--gray);
+  border-color: var(--gray);
+  color: var(--white);
+}
+
+.filled {
+  border-color: var(--gray);
+}
+
+@keyframes blink {
+  0% {
+    border-color: #8b0000;
+  }
+}
+
+#keyboard {
+  max-width: 550px;
+  flex-wrap: wrap;
+  margin: 4rem auto 2rem;
+  display: flex;
+}
+
+.row {
+  width: 100%;
+  justify-content: center;
+  gap: .3rem;
+  margin-bottom: .3rem;
+  display: flex;
+}
+
+.key {
+  width: 7.65%;
+  height: 58px;
+  background-color: var(--ltgray);
+  color: var(--black);
+  font-size: 1rem;
+  font-family: vars(--sans);
+  text-align: center;
+  border-radius: 5px;
+  font-weight: bold;
+}
+
+.func {
+  width: 10.9286%;
+  font-size: .7rem;
+}
+
+.key span {
+  font-size: 1.3rem;
+}
+
+.key:hover {
+  cursor: pointer;
+}
+
+/*# sourceMappingURL=index.1303bb05.css.map */

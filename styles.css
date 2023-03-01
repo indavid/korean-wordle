@@ -1,14 +1,14 @@
-@import url('https://fonts.googleapis.com/css2?family=Black+Han+Sans&family=Noto+Serif+KR:wght@900&family=Ultra&display=swap');
+@import url("https://fonts.googleapis.com/css2?family=Black+Han+Sans&family=Noto+Serif+KR:wght@900&family=Ultra&display=swap");
 
 :root {
-  --white: #FFFFFF;
+  --white: #ffffff;
   --black: #000000;
-  --green: #6AA964;
-  --yellow: #C9B458;
-  --gray: #787C7E;
-  --ltgray: #D3D6DA;
+  --green: #6aa964;
+  --yellow: #c9b458;
+  --gray: #787c7e;
+  --ltgray: #d3d6da;
   --font-size: 1rem;
-  --serif: 'Ultra', 'Noto Serif KR', "Times New Roman", serif;
+  --serif: "Ultra", "Noto Serif KR", "Times New Roman", serif;
   --sans: "Helvetica Neue", "Helvetica", "Arial", sans-serif;
 }
 
@@ -55,11 +55,16 @@ header .left-icons {
   width: 6rem;
 }
 
+header .fa-solid {
+  background-color: var(--white);
+}
+
 header .right-icons {
   display: flex;
   justify-content: flex-end;
   gap: 1rem;
   width: 6rem;
+  background-color: var(--white);
 }
 
 button {
@@ -86,6 +91,7 @@ button {
   font-size: 30px;
   font-weight: bold;
   color: white;
+  visibility: hidden;
 }
 
 .word {
@@ -107,7 +113,29 @@ button {
   display: flex;
   align-items: center;
   justify-content: center;
-  color: var(--black)
+  color: var(--black);
+}
+
+.correct {
+  background-color: var(--green);
+  border-color: var(--green);
+  color: var(--white);
+}
+
+.close {
+  background-color: var(--yellow);
+  border-color: var(--yellow);
+  color: var(--white);
+}
+
+.wrong {
+  background-color: var(--gray);
+  border-color: var(--gray);
+  color: var(--white);
+}
+
+.filled {
+  border-color: var(--gray);
 }
 
 @keyframes blink {

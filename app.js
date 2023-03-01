@@ -1,236 +1,307 @@
-const colors = {
-  white: '#FFFFFF',
-  black: '#000000',
-  green: '#6AA964',
-  yellow: '#C9B458',
-  gray: '#787C7E',
-  ltgray: '#D3D6DA',
-};
+const ANSWER_LENGTH = 5; // How many lettters is the answer
+const ROUNDS = 6; // How many guesses a player gets
 
-const letters = document.querySelectorAll('.letter');
-const spinner = document.querySelector('.spinner');
-const keys = document.querySelectorAll('.key');
-
-let position = 0;
-let wordLimit = 5;
-let answer = '';
-let isGameOver = false;
-
-// Grab the answer from a random selection from the WordList
-function getAnswer() {
-  try {
-    answer = wordList[Math.floor(Math.random() * 38,698)];
-    console.log(answer);
-    setLoading(false);
-  } catch (error) {
-    console.error('Could not get right answer');
+// Contains Game State
+class GameBoard {
+  constructor() {
+    this.rows = ROUNDS; // Number of Guesses
+    this.cols = ANSWER_LENGTH; // Length of Answer
+    this.board = Array.from(Array(this.rows), () =>
+      new Array(this.cols).fill(null)
+    );
+    this.styleBoard = Array.from(Array(this.rows), () =>
+      new Array(this.cols).fill(null)
+    );
+  }
+  // Getter method for gameBoard 2-D Array
+  getBoard() {
+    return this.board;
+  }
+  // Add Letter to Array
+  addLetter(rows, cols, letter) {
+    this.board[rows][cols] = letter;
+  }
+  // Delete Letter to Array
+  deleteLetter(rows, cols) {
+    this.board[rows][cols] = null;
+  }
+  // Getter for styleBoard
+  getStyleBoard() {
+    return this.styleBoard;
+  }
+  // Add Style to Array
+  addStyle(rows, cols, style) {
+    this.styleBoard[rows][cols] = style;
+  }
+  // Delete Style to Array
+  deleteStyle(rows, cols) {
+    this.styleBoard[rows][cols] = null;
   }
 }
 
-// Look for the guess in the dictionary to see if it exists
- function validateWord(guess) {
-  try {
-    setLoading(true);
-    const isValid = wordList.includes(guess);
-    setLoading(false);
-    return isValid;
-  } catch {
-    console.error('Could not find word');
+// Contains Game Logic
+class GameController {
+  constructor(gameBoard) {
+    this.gameBoard = gameBoard;
+    this.wordList = wordList;
+    this.answer = "";
+    this.answerLength = ANSWER_LENGTH;
+    this.rounds = ROUNDS;
+    this.currentRound = 0;
+    this.currentGuess = "";
+    this.isGameRunning = true;
+    this.isGameWon = false;
   }
- }
-
-// Helper functions
-// Set loading icon visible or hidden depending on AJAX request
-function setLoading(isLoading) {
-  isLoading ? spinner.style.visibility = 'visible' : spinner.style.visibility = 'hidden';
-}
-
-// Check if key.event is an English letter
-function isLetter(letter) {
-  return /^[a-zA-Z]$/.test(letter);
-}
-
-// Check if key.event is a Korean letter
-function isKorean(letter) {
-  const koreanRegex = /[\u3130-\u318F\uAC00-\uD7AF]+/;
-  return koreanRegex.test(letter);
-}
-
-function convertToKorean(letter) {
-  const englishToKorean = {
-    q: "ㅂ",
-    w: "ㅈ",
-    e: "ㄷ",
-    r: "ㄱ",
-    t: "ㅅ",
-    y: "ㅛ",
-    u: "ㅕ",
-    i: "ㅑ",
-    o: "ㅐ",
-    p: "ㅔ",
-    a: "ㅁ",
-    s: "ㄴ",
-    d: "ㅇ",
-    f: "ㄹ",
-    g: "ㅎ",
-    h: "ㅗ",
-    j: "ㅓ",
-    k: "ㅏ",
-    l: "ㅣ",
-    z: "ㅋ",
-    x: "ㅌ",
-    c: "ㅊ",
-    v: "ㅍ",
-    b: "ㅠ",
-    n: "ㅜ",
-    m: "ㅡ",
+  // Getter for isGameWon
+  getIsGameWon = () => {
+    return this.isGameWon;
+  };
+  getIsGameRunning = () => {
+    return this.isGameRunning;
+  };
+  // Getter method for GameBoard object's gameBoard array
+  getBoard = () => {
+    return this.gameBoard.getBoard();
+  };
+  // Getter method for GameBoard object's styleBoard array
+  getStyleBoard = () => {
+    return this.gameBoard.getStyleBoard();
+  };
+  // Load answer
+  loadAnswer() {
+    try {
+      this.answer = this.wordList[Math.floor(Math.random() * 38, 698)];
+      console.log(this.answer);
+    } catch (error) {
+      console.error("Could not load answer");
+    }
   }
-  if (englishToKorean[letter.toLowerCase()]) {
-    return englishToKorean[letter.toLowerCase()];
+  // Check if input is an English letter
+  isLetter(letter) {
+    return /^[a-zA-Z]$/.test(letter);
   }
-}
+  // Check if key.event is a Korean letter
+  isKorean(letter) {
+    const koreanRegex = /[\u3130-\u318F\uAC00-\uD7AF]+/;
+    return koreanRegex.test(letter);
+  }
 
-// Add letter to current word up to the limit
-function addLetter(letter) {
-  if (position < wordLimit && position < 30) {
-    letters[position].innerText = letter;
-    letters[position].style.borderColor = colors.gray;
-    position++;
+  convertToKorean(letter) {
+    const englishToKorean = {
+      q: "ㅂ",
+      w: "ㅈ",
+      e: "ㄷ",
+      r: "ㄱ",
+      t: "ㅅ",
+      y: "ㅛ",
+      u: "ㅕ",
+      i: "ㅑ",
+      o: "ㅐ",
+      p: "ㅔ",
+      a: "ㅁ",
+      s: "ㄴ",
+      d: "ㅇ",
+      f: "ㄹ",
+      g: "ㅎ",
+      h: "ㅗ",
+      j: "ㅓ",
+      k: "ㅏ",
+      l: "ㅣ",
+      z: "ㅋ",
+      x: "ㅌ",
+      c: "ㅊ",
+      v: "ㅍ",
+      b: "ㅠ",
+      n: "ㅜ",
+      m: "ㅡ",
+    };
+    if (englishToKorean[letter.toLowerCase()]) {
+      return englishToKorean[letter.toLowerCase()];
+    }
   }
-}
-
-// Delete the last letter from current word
-function deleteLetter(letter) {
-  if (isGameOver) {
-    return;
-  }
-  else if (position > wordLimit - 5) {
-    letters[position - 1].innerText = '';
-    letters[position - 1].style.borderColor = colors.ltgray;
-    position--;
-  } else {
-    letters[position].innerText = '';
-    letters[position].style.borderColor = colors.ltgray;
-  }
-}
-
-// Makes an object out of an array of letters and keeps count of how many letters are there
-function makeMap(array) {
-  const obj = {};
-  for (let i = 0; i < array.length; i++) {
-    const letter = array[i];
-    if (obj[letter]) {
-      obj[letter]++;
+  // Add letter to gameBoard array
+  addLetter(letter) {
+    if (this.currentGuess.length < this.answerLength) {
+      this.currentGuess += letter;
     } else {
-      obj[letter] = 1;
+      this.currentGuess =
+        this.currentGuess.substring(0, this.answerLength - 1) + letter;
     }
+    this.gameBoard.addLetter(
+      this.currentRound,
+      this.currentGuess.length - 1,
+      letter
+    );
+    this.gameBoard.addStyle(
+      this.currentRound,
+      this.currentGuess.length - 1,
+      "filled"
+    );
   }
-  return obj;
-}
-
-// Main functions
-// Everytime user presses enter, check to see if word is correct, wrong, or valid
-async function checkWord() {
-  // word is all filled up
-  if (position === wordLimit) {
-    let guess = [];
-    // get the guess word
-    for (let i = position - 5; i < wordLimit; i++) {
-      guess.push(letters[i].innerText.toLowerCase());
-    }
-    guess = guess.join('');
-
-    // If guess is a valid word from the wordLList
-    console.log(guess);
-    console.log(validateWord(guess));
-    if (validateWord(guess)) {
-      // color the letters depending on correctness
-      const answerMap = makeMap(answer); // Keep track of letter count
-      let j = 0;
-      for (let i = position - 5; i < wordLimit; i++) {
-        if (answer.includes(guess[j]) && answerMap[guess[j]] != 0) {
-          letters[i].style.backgroundColor = colors.yellow;
-          letters[i].style.borderColor = colors.yellow;
-          letters[i].style.color = colors.white;
-          if (guess[j] === answer[j]) {
-            letters[i].style.backgroundColor = colors.green;
-            letters[i].style.color = colors.white;
-            letters[i].style.borderColor = colors.green;
-          }
-          answerMap[guess[j]]--;
-        } else {
-          letters[i].style.backgroundColor = colors.gray;
-          letters[i].style.borderColor = colors.gray;
-          letters[i].style.color = colors.white;
-        }
-        j++;
-      }
-      // check if guess is answer 
-      if (guess === answer) {
-        isGameOver = true;
-        spinner.innerText = '🏆 🏆 🏆';
-        setTimeout(() => {
-          alert(`You win! Congratulations!`);
-        }, '300');
-        setLoading(true);
-        spinner.style.animation = 'null';
-      } else if (wordLimit === 30) {
-        // wait before giving alert to color the blocks
-        setTimeout(() => {
-          alert(`You Lose! The correct answer was ${answer}`);
-        }, '300');
+  // Delete letter from gameBoard array
+  deleteLetter() {
+    this.currentGuess = this.currentGuess.substring(
+      0,
+      this.currentGuess.length - 1
+    );
+    this.gameBoard.deleteLetter(this.currentRound, this.currentGuess.length);
+    this.gameBoard.deleteStyle(this.currentRound, this.currentGuess.length);
+  }
+  // Makes an object out of an array of letters and keeps count of how many letters are there
+  makeMap(array) {
+    const obj = {};
+    for (let i = 0; i < array.length; i++) {
+      const letter = array[i];
+      if (obj[letter]) {
+        obj[letter]++;
       } else {
-        // advance to next word block
-        wordLimit += 5;
+        obj[letter] = 1;
       }
-    } else {
-      // not a valid word - stay in same word block
-      for (let i = position - 5; i < wordLimit; i++) {
-        requestAnimationFrame((time) => {
-          requestAnimationFrame((time) => {
-            letters[i].style.animation = 'blink 1s linear';
-          });
-          letters[i].style.animation = '';
-        });
-      }
+    }
+    return obj;
+  }
+  // Verify if currentGuess is answer
+  verifyGuess() {
+    if (this.currentGuess.length != this.answerLength) {
+      console.log("not long enough");
+      return;
+    } else if (!this.wordList.includes(this.currentGuess)) {
+      console.log("not a valid word");
       return;
     }
-  } else { // needs more letters
-    // do nothing
-    return;
+    // make objects for encapsulation
+    const answerParts = this.answer.split("");
+    const answerMap = this.makeMap(answerParts);
+    const guessParts = this.currentGuess.split("");
+    // check if game is won
+    this.isGameWon = true;
+    // first pass to see which letter we can mark as correct (green)
+    for (let i = 0; i < this.answerLength; i++) {
+      if (guessParts[i] === answerParts[i]) {
+        this.gameBoard.addStyle(this.currentRound, i, "correct");
+        answerMap[guessParts[i]]--;
+      }
+    }
+    // second pass to see which letters are close or wrong (yellow or gray)
+    for (let i = 0; i < this.answerLength; i++) {
+      if (guessParts[i] === answerParts[i]) {
+        // do nothing
+      } else if (answerMap[guessParts[i]] && answerMap[guessParts[i]] > 0) {
+        this.gameBoard.addStyle(this.currentRound, i, "close");
+        answerMap[guessParts[i]]--;
+        this.isGameWon = false;
+      } else {
+        this.gameBoard.addStyle(this.currentRound, i, "wrong");
+        this.isGameWon = false;
+      }
+    }
+    // advance to next guess
+    this.currentRound++;
+    this.currentGuess = "";
+
+    // Check if game is over - Play out Win or Lose conditions
+    if (this.isGameWon) {
+      this.isGameRunning = false;
+      this.currentRound = 6;
+    } else if (this.currentRound === this.rounds) {
+      this.isGameRunning = false;
+    }
+  }
+  // Handle game logic of keyboard event from user
+  handleEvent(key, preventDefault) {
+    if (key === "Backspace" || key === "Delete") {
+      this.deleteLetter();
+    } else if (key === "Enter" || key === "ENTER") {
+      this.verifyGuess();
+    } else if (this.isLetter(key) || this.isKorean(key)) {
+      if (this.isLetter(key)) {
+        key = this.convertToKorean(key);
+      }
+      this.addLetter(key);
+    } else {
+      preventDefault;
+    }
   }
 }
 
-// Listen for user's keyboard events
-async function init() {
-  // Load Answer from API
-  await getAnswer();
-  // Listen to keyboard for user input
-  document.body.addEventListener('keydown', function(event) {
-    if (event.key === 'Backspace' || event.key === 'Delete') {
-      deleteLetter();
-    } else if (event.key === 'Enter') {
-      checkWord();
-    } else if (isKorean(event.key)) {
-      addLetter(event.key);
-    } else if (isLetter(event.key)) {
-      addLetter(convertToKorean(event.key));
-    } else {
-      event.preventDefault;
+class ScreenController {
+  constructor(gameController) {
+    this.body = document.body;
+    this.boardDiv = document.querySelector(".board");
+    this.keyButtons = document.querySelectorAll(".key");
+    this.gameController = gameController;
+    this.spinner = document.querySelector(".spinner");
+  }
+  // Set loading icon spinning
+  setLoading(isLoading) {
+    isLoading
+      ? (this.spinner.style.visibility = "visible")
+      : (this.spinner.style.visibility = "hidden");
+  }
+  // Render View based off of Model given by Controller
+  renderBoard() {
+    // Reset the board div
+    this.boardDiv.innerHTML = "";
+    // Render board div based on current GameBoard object
+    const board = this.gameController.getBoard();
+    const styleBoard = this.gameController.getStyleBoard();
+    for (let i = 0; i < board.length; i++) {
+      const wordDiv = document.createElement("div");
+      wordDiv.className = "word p" + i;
+      this.boardDiv.appendChild(wordDiv);
+      for (let j = 0; j < board[i].length; j++) {
+        const letterDiv = document.createElement("div");
+        letterDiv.className = "letter";
+        wordDiv.appendChild(letterDiv);
+        letterDiv.innerText = board[i][j];
+        if (letterDiv.innerText) {
+          letterDiv.classList.add(styleBoard[i][j]);
+        }
+      }
     }
-  });
-  // Listen to the key buttons for user input
-  keys.forEach(key => {
-    key.addEventListener('click', () => {
-      if (isKorean(key.innerText)) {
-        addLetter(key.innerText);
-      } else if (key.innerText === 'ENTER') {
-        checkWord();
-      } else if (key.innerText === 'Backspace') {
-        deleteLetter();
-      } 
+  }
+  // Add Event Listener to body for user events and hand to Controller for Game Logic
+  listen() {
+    this.body.addEventListener("keydown", ({ key, preventDefault }) => {
+      this.gameController.handleEvent(key, preventDefault);
+      this.renderBoard();
+      console.log(
+        this.gameController.getIsGameRunning() +
+          " and " +
+          this.gameController.getIsGameWon()
+      );
+      if (!this.gameController.getIsGameRunning()) {
+        if (this.gameController.getIsGameWon()) {
+          setTimeout(() => alert("You won! :)"), 500);
+        } else {
+          setTimeout(() => alert("You lose. :("), 500);
+        }
+      }
     });
-  });
+    this.keyButtons.forEach((key) => {
+      key.addEventListener("click", () => {
+        this.gameController.handleEvent(key.innerText, null);
+        this.renderBoard();
+        if (!this.gameController.getIsGameRunning()) {
+          if (this.gameController.getIsGameWon()) {
+            setTimeout(() => alert("You won! :)"), 500);
+          } else {
+            setTimeout(() => alert("You lose. :("), 500);
+          }
+        }
+      });
+    });
+  }
+}
+
+function init() {
+  const board = new GameBoard();
+  console.log(board.gameBoard);
+  const game = new GameController(board);
+  game.loadAnswer();
+  const screen = new ScreenController(game);
+  screen.renderBoard();
+  screen.listen();
 }
 
 init();
