@@ -25,6 +25,7 @@ body {
   font-family: var(--sans);
   background-color: var(--white);
   font-size: var(--font-size);
+  height: 100vh;
 }
 
 /** Navbar Styles **/
@@ -85,34 +86,22 @@ button {
   display: flex;
   flex-direction: column;
   height: calc(100vh - 65px);
+  align-items: center;
+}
+
+.board-module {
+  flex-grow: 1;
+  display: flex;
+  align-items: center;
+  justify-content: center;
 }
 
 .board {
-  flex-grow: 1;
+  height: 390px;
 }
 
 #keyboard {
   height: 188px;
-}
-
-/** Loading Status if needed / Game Status Indicator **/
-.game-status {
-  display: flex;
-  align-items: center;
-  justify-content: center;
-  padding: 20px;
-}
-@keyframes spin {
-  to {
-    transform: rotate(360deg);
-  }
-}
-.indicator {
-  animation: spin 0.5s infinite linear;
-  font-size: 30px;
-  font-weight: bold;
-  color: white;
-  display: none;
 }
 
 /** Styles for board of letter **/
@@ -169,7 +158,7 @@ button {
   display: flex;
   flex-wrap: wrap;
   max-width: 550px;
-  margin: 2rem auto 2rem;
+  margin: 0 3px;
 }
 .row {
   display: flex;
@@ -179,7 +168,7 @@ button {
   margin-bottom: 0.3rem;
 }
 .key {
-  width: calc(76.5% / 10);
+  width: calc(85% / 10);
   height: 58px;
   background-color: var(--ltgray);
   color: var(--black);
