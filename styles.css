@@ -11,17 +11,14 @@
   --serif: "Ultra", "Noto Serif KR", "Times New Roman", serif;
   --sans: "Helvetica Neue", "Helvetica", "Arial", sans-serif;
 }
-
 html {
   box-sizing: border-box;
 }
-
 *,
 *::before,
 *::after {
   box-sizing: inherit;
 }
-
 body {
   padding: 0;
   margin: 0;
@@ -30,70 +27,95 @@ body {
   font-size: var(--font-size);
 }
 
-/** Nav Styles **/
+/** Navbar Styles **/
 header {
   display: flex;
   flex-direction: row;
   flex-wrap: nowrap;
+  height: 65px;
   justify-content: space-between;
   align-items: center;
-  padding: 0 2rem;
-  border: 1px solid var(--ltgray);
+  padding: 0 1rem;
+  border-bottom: 1px solid var(--ltgray);
 }
-
 header h1 {
   font-family: var(--serif);
   justify-self: center;
+  text-align: center;
   font-size: 1.5rem;
 }
-
 header span {
   font-size: 200%;
 }
-
 header .left-icons {
-  width: 6rem;
+  justify-content: flex-start;
 }
-
 header .fa-solid {
   background-color: var(--white);
 }
-
 header .right-icons {
-  display: flex;
   justify-content: flex-end;
-  gap: 1rem;
-  width: 6rem;
-  background-color: var(--white);
 }
-
 button {
   border: none;
   margin: 0;
   padding: 0;
 }
+/** For mobile devices, change navbar style **/
+@media (max-width: 420px) {
+  header {
+    justify-content: center;
+  }
+  header h1 {
+    text-align: left;
+    order: 1;
+    flex-grow: 2;
+  }
+  header .left-icons {
+    order: 2;
+    padding-right: 10px;
+  }
+  header .right-icons {
+    order: 3;
+  }
+}
 
+/** Responsive style for overall game module **/
+.game-module {
+  display: flex;
+  flex-direction: column;
+  height: calc(100vh - 65px);
+}
+
+.board {
+  flex-grow: 1;
+}
+
+#keyboard {
+  height: 188px;
+}
+
+/** Loading Status if needed / Game Status Indicator **/
 .game-status {
   display: flex;
   align-items: center;
   justify-content: center;
   padding: 20px;
 }
-
 @keyframes spin {
   to {
     transform: rotate(360deg);
   }
 }
-
-.spinner {
+.indicator {
   animation: spin 0.5s infinite linear;
   font-size: 30px;
   font-weight: bold;
   color: white;
-  visibility: hidden;
+  display: none;
 }
 
+/** Styles for board of letter **/
 .word {
   display: flex;
   column-gap: 5px;
@@ -102,7 +124,6 @@ button {
   width: 100%;
   max-width: 340px;
 }
-
 .letter {
   width: 60px;
   height: 60px;
@@ -115,27 +136,26 @@ button {
   justify-content: center;
   color: var(--black);
 }
-
 .correct {
   background-color: var(--green);
   border-color: var(--green);
   color: var(--white);
 }
-
 .close {
   background-color: var(--yellow);
   border-color: var(--yellow);
   color: var(--white);
 }
-
 .wrong {
   background-color: var(--gray);
   border-color: var(--gray);
   color: var(--white);
 }
-
 .filled {
   border-color: var(--gray);
+}
+.invalid {
+  animation: blink 1s linear;
 }
 
 @keyframes blink {
@@ -149,9 +169,8 @@ button {
   display: flex;
   flex-wrap: wrap;
   max-width: 550px;
-  margin: 4rem auto 2rem;
+  margin: 2rem auto 2rem;
 }
-
 .row {
   display: flex;
   justify-content: center;
@@ -159,7 +178,6 @@ button {
   gap: 0.3rem;
   margin-bottom: 0.3rem;
 }
-
 .key {
   width: calc(76.5% / 10);
   height: 58px;
@@ -171,16 +189,13 @@ button {
   font-weight: bold;
   text-align: center;
 }
-
 .func {
   width: calc(76.5% / 7);
   font-size: 0.7rem;
 }
-
 .key span {
   font-size: 1.3rem;
 }
-
 .key:hover {
   cursor: pointer;
 }

@@ -2,7 +2,7 @@ const ANSWER_LENGTH = 5; // How many lettters is the answer
 const ROUNDS = 6; // How many guesses a player gets
 
 // Contains Game State
-class GameBoard {
+class GameState {
   constructor() {
     this.rows = ROUNDS; // Number of Guesses
     this.cols = ANSWER_LENGTH; // Length of Answer
@@ -12,8 +12,11 @@ class GameBoard {
     this.styleBoard = Array.from(Array(this.rows), () =>
       new Array(this.cols).fill(null)
     );
+    this.animationBoard = Array.from(Array(this.rows), () =>
+      new Array(this.cols).fill(null)
+    );
   }
-  // Getter method for gameBoard 2-D Array
+  // Getter method for gameState 2-D Array
   getBoard() {
     return this.board;
   }
@@ -37,12 +40,26 @@ class GameBoard {
   deleteStyle(rows, cols) {
     this.styleBoard[rows][cols] = null;
   }
+  // Getter for styleBoard
+  getAnimationBoard() {
+    return this.animationBoard;
+  }
+  // Add Style to Array
+  addAnimation(rows, cols, animation) {
+    this.animationBoard[rows][cols] = animation;
+  }
+  // Delete Style to Array
+  resetAnimation() {
+    this.animationBoard = Array.from(Array(this.rows), () =>
+      new Array(this.cols).fill(null)
+    );
+  }
 }
 
 // Contains Game Logic
 class GameController {
-  constructor(gameBoard) {
-    this.gameBoard = gameBoard;
+  constructor(gameStateInput) {
+    this.gameState = gameStateInput;
     this.wordList = wordList;
     this.answer = "";
     this.answerLength = ANSWER_LENGTH;
@@ -59,13 +76,17 @@ class GameController {
   getIsGameRunning = () => {
     return this.isGameRunning;
   };
-  // Getter method for GameBoard object's gameBoard array
+  // Getter method for gameState object's gameState array
   getBoard = () => {
-    return this.gameBoard.getBoard();
+    return this.gameState.getBoard();
   };
-  // Getter method for GameBoard object's styleBoard array
+  // Getter method for gameState object's styleBoard array
   getStyleBoard = () => {
-    return this.gameBoard.getStyleBoard();
+    return this.gameState.getStyleBoard();
+  };
+  // Getter method for gameState object's animationBoard array
+  getAnimationBoard = () => {
+    return this.gameState.getAnimationBoard();
   };
   // Load answer
   loadAnswer() {
@@ -119,7 +140,7 @@ class GameController {
       return englishToKorean[letter.toLowerCase()];
     }
   }
-  // Add letter to gameBoard array
+  // Add letter to gameState array
   addLetter(letter) {
     if (this.currentGuess.length < this.answerLength) {
       this.currentGuess += letter;
@@ -127,25 +148,29 @@ class GameController {
       this.currentGuess =
         this.currentGuess.substring(0, this.answerLength - 1) + letter;
     }
-    this.gameBoard.addLetter(
+    this.gameState.addLetter(
       this.currentRound,
       this.currentGuess.length - 1,
       letter
     );
-    this.gameBoard.addStyle(
+    this.gameState.addStyle(
       this.currentRound,
       this.currentGuess.length - 1,
       "filled"
     );
   }
-  // Delete letter from gameBoard array
+  // Delete letter from gameState array
   deleteLetter() {
     this.currentGuess = this.currentGuess.substring(
       0,
       this.currentGuess.length - 1
     );
-    this.gameBoard.deleteLetter(this.currentRound, this.currentGuess.length);
-    this.gameBoard.deleteStyle(this.currentRound, this.currentGuess.length);
+    this.gameState.deleteLetter(this.currentRound, this.currentGuess.length);
+    this.gameState.deleteStyle(this.currentRound, this.currentGuess.length);
+  }
+  // Call after animation has been triggered
+  resetAnimationBoard() {
+    this.gameState.resetAnimation();
   }
   // Makes an object out of an array of letters and keeps count of how many letters are there
   makeMap(array) {
@@ -162,36 +187,39 @@ class GameController {
   }
   // Verify if currentGuess is answer
   verifyGuess() {
+    // Not a valid word
     if (this.currentGuess.length != this.answerLength) {
-      console.log("not long enough");
       return;
     } else if (!this.wordList.includes(this.currentGuess)) {
       console.log("not a valid word");
+      for (let i = 0; i < this.answerLength; i++) {
+        this.gameState.addAnimation(this.currentRound, i, "invalid");
+      }
       return;
     }
-    // make objects for encapsulation
+    // Make objects for encapsulation
     const answerParts = this.answer.split("");
     const answerMap = this.makeMap(answerParts);
     const guessParts = this.currentGuess.split("");
-    // check if game is won
+    // Check if game is won
     this.isGameWon = true;
-    // first pass to see which letter we can mark as correct (green)
+    // First pass to see which letter we can mark as correct (green)
     for (let i = 0; i < this.answerLength; i++) {
       if (guessParts[i] === answerParts[i]) {
-        this.gameBoard.addStyle(this.currentRound, i, "correct");
+        this.gameState.addStyle(this.currentRound, i, "correct");
         answerMap[guessParts[i]]--;
       }
     }
-    // second pass to see which letters are close or wrong (yellow or gray)
+    // Second pass to see which letters are close or wrong (yellow or gray)
     for (let i = 0; i < this.answerLength; i++) {
       if (guessParts[i] === answerParts[i]) {
         // do nothing
       } else if (answerMap[guessParts[i]] && answerMap[guessParts[i]] > 0) {
-        this.gameBoard.addStyle(this.currentRound, i, "close");
+        this.gameState.addStyle(this.currentRound, i, "close");
         answerMap[guessParts[i]]--;
         this.isGameWon = false;
       } else {
-        this.gameBoard.addStyle(this.currentRound, i, "wrong");
+        this.gameState.addStyle(this.currentRound, i, "wrong");
         this.isGameWon = false;
       }
     }
@@ -242,9 +270,10 @@ class ScreenController {
   renderBoard() {
     // Reset the board div
     this.boardDiv.innerHTML = "";
-    // Render board div based on current GameBoard object
+    // Render board div based on current gameState object
     const board = this.gameController.getBoard();
     const styleBoard = this.gameController.getStyleBoard();
+    const animationBoard = this.gameController.getAnimationBoard();
     for (let i = 0; i < board.length; i++) {
       const wordDiv = document.createElement("div");
       wordDiv.className = "word p" + i;
@@ -255,6 +284,8 @@ class ScreenController {
         wordDiv.appendChild(letterDiv);
         letterDiv.innerText = board[i][j];
         if (letterDiv.innerText) {
+          letterDiv.classList.add(animationBoard[i][j]);
+          this.gameController.resetAnimationBoard();
           letterDiv.classList.add(styleBoard[i][j]);
         }
       }
@@ -262,6 +293,7 @@ class ScreenController {
   }
   // Add Event Listener to body for user events and hand to Controller for Game Logic
   listen() {
+    // Listen to keyboard events and check if game is over
     this.body.addEventListener("keydown", ({ key, preventDefault }) => {
       this.gameController.handleEvent(key, preventDefault);
       this.renderBoard();
@@ -278,6 +310,7 @@ class ScreenController {
         }
       }
     });
+    // Listen to button events and check if game is over
     this.keyButtons.forEach((key) => {
       key.addEventListener("click", () => {
         this.gameController.handleEvent(key.innerText, null);
@@ -295,9 +328,9 @@ class ScreenController {
 }
 
 function init() {
-  const board = new GameBoard();
-  console.log(board.gameBoard);
-  const game = new GameController(board);
+  const state = new GameState();
+  console.log(state.board);
+  const game = new GameController(state);
   game.loadAnswer();
   const screen = new ScreenController(game);
   screen.renderBoard();
