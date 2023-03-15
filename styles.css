@@ -26,7 +26,6 @@ body {
   font-family: var(--sans);
   background-color: var(--white);
   font-size: var(--font-size);
-  height: 100vh;
   overflow-x: hidden;
 }
 

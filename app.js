@@ -104,8 +104,8 @@ class GameController {
     if (!storedAnswer) {
       this.answer = this.loadAnswer();
     } else {
-      // time to reset answer and the whole game in ms: 1 min
-      if (timeElapsed >= 60000) {
+      // time to reset answer and the whole game in ms: 1 day
+      if (timeElapsed >= 86400000) {
         localStorage.setItem("timeStarted", JSON.stringify(now.getTime()));
         this.resetGame();
       } else {
