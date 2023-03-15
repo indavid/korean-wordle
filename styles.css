@@ -315,7 +315,7 @@ input:checked + .slider:before {
   margin-bottom: 0.3rem;
 }
 .key {
-  width: calc(85% / 10);
+  width: calc(96% / 10);
   height: 58px;
   background-color: var(--ltgray);
   color: var(--black);
