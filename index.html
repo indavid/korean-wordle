@@ -3,6 +3,7 @@
   <head>
     <meta charset="utf-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <link rel="icon" type="image/x-icon" href="/images/grid.ico" />
     <title>Korean Wordle</title>
     <link rel="stylesheet" href="styles.css" />
     <script
@@ -28,6 +29,64 @@
     </header>
     <div class="game-module">
       <div class="toast"></div>
+      <div class="info-modal">
+        <button type="button" class="exit">
+          <span class="fa-regular fa-circle-xmark"></span>
+        </button>
+        <h2>How to Play</h2>
+        <p>
+          Guess the WORDLE in 6 tries. The result of your guess will change the
+          color of your tile. Also, ㅖ is written like ㅔ ㅔ and ㅢ is written
+          like ㅡㅣ!
+        </p>
+        <p>
+          WORDLE을 6번 만에 맞춰보세요. 시도의 결과는 타일의 색 변화로
+          나타납니다. ㅖ는 ㅔㅔ와 같이 풀어 쓰고, ㅢ는 ㅡㅣ와 같이 풀어쓰니 주의
+          해 주세요!
+        </p>
+        <p>
+          You can find all the code
+          <a href="https://github.com/indavid/korean-wordle">here</a>!
+        </p>
+        <p class="bold">Examples</p>
+        <div class="word p1">
+          <div class="letter correct">ㅂ</div>
+          <div class="letter wrong">ㅏ</div>
+          <div class="letter wrong">ㄹ</div>
+          <div class="letter wrong">ㅏ</div>
+          <div class="letter wrong">ㅁ</div>
+        </div>
+        <p class="desc">ㅂ is in the answer and in the right position.</p>
+        <div class="word p1">
+          <div class="letter wrong">ㄱ</div>
+          <div class="letter wrong">ㅏ</div>
+          <div class="letter close">ㅋ</div>
+          <div class="letter wrong">ㅈ</div>
+          <div class="letter wrong">ㅏ</div>
+        </div>
+        <p class="desc">ㅈ is in the answer but in the wrong position.</p>
+        <div class="word p1">
+          <div class="letter wrong">ㅂ</div>
+          <div class="letter wrong">ㅏ</div>
+          <div class="letter wrong">ㅇ</div>
+          <div class="letter wrong">ㄱ</div>
+          <div class="letter wrong">ㅜ</div>
+        </div>
+        <p class="desc">All of these letters are not in the answer.</p>
+      </div>
+      <div class="setting-modal">
+        <button type="button" class="exit">
+          <span class="fa-regular fa-circle-xmark"></span>
+        </button>
+        <h2>Settings</h2>
+        <div class="dark">
+          <span>Dark Mode</span>
+          <label class="switch">
+            <input type="checkbox" />
+            <span class="slider round"></span>
+          </label>
+        </div>
+      </div>
       <div class="board-module">
         <div class="board"></div>
       </div>

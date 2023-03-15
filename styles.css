@@ -5,8 +5,9 @@
   --black: #000000;
   --green: #6aa964;
   --yellow: #c9b458;
-  --gray: #787c7e;
+  --gray: #919698;
   --ltgray: #d3d6da;
+  --bggray: rgba(226, 226, 226, 0.9);
   --font-size: 1rem;
   --serif: "Ultra", "Noto Serif KR", "Times New Roman", serif;
   --sans: "Helvetica Neue", "Helvetica", "Arial", sans-serif;
@@ -27,6 +28,17 @@ body {
   font-size: var(--font-size);
   height: 100vh;
   overflow-x: hidden;
+}
+
+/** Styling for dark mode **/
+.dark-mode {
+  --white: #000000;
+  --black: #ffffff;
+  --green: #6aa964;
+  --yellow: #c9b458;
+  --gray: #787c7e;
+  --ltgray: #2f2f30;
+  --bggray: rgba(50, 50, 50, 0.96);
 }
 
 /** Navbar Styles **/
@@ -81,6 +93,144 @@ button {
   header .right-icons {
     order: 3;
   }
+}
+
+/** Styles for buttons **/
+/** INFO **/
+.info {
+  cursor: pointer;
+}
+
+.setting {
+  cursor: pointer;
+}
+
+/** Styles for modals **/
+.info-modal {
+  text-align: center;
+  width: 90%;
+  min-height: 660px;
+  max-width: 400px;
+  padding: 25px;
+  display: none;
+  z-index: 2;
+  position: absolute;
+  top: 80px;
+  background-color: var(--bggray);
+}
+.exit {
+  position: absolute;
+  top: 1rem;
+  right: 1rem;
+  cursor: pointer;
+  background-color: var(--bggray);
+}
+.info-modal .fa-circle-xmark {
+  font-size: 200%;
+  color: var(--black);
+  background-color: var(--bggray);
+}
+.info-modal h2 {
+  font-family: var(--serif);
+  color: var(--black);
+  font-size: 125%;
+}
+.info-modal p {
+  color: var(--gray);
+}
+.info-modal .bold {
+  font-family: var(--serif);
+  text-align: left;
+  color: var(--black);
+}
+.info-modal .desc {
+  text-align: left;
+}
+/** SETTING **/
+.setting-modal {
+  text-align: center;
+  width: 90%;
+  max-height: 440px;
+  max-width: 400px;
+  padding: 25px;
+  display: none;
+  z-index: 2;
+  position: absolute;
+  top: 90px;
+  background-color: var(--bggray);
+}
+.setting-modal .fa-circle-xmark {
+  font-size: 200%;
+  color: var(--black);
+  background-color: var(--bggray);
+}
+.setting-modal h2 {
+  font-family: var(--serif);
+  color: var(--black);
+  font-size: 125%;
+}
+.setting-modal .dark {
+  display: flex;
+  justify-content: space-between;
+  width: 95%;
+  border-bottom: 1px dotted gray;
+}
+.setting-modal span {
+  text-align: left;
+  font-size: 1rem;
+  padding-bottom: 25px;
+  color: var(--black);
+}
+.switch {
+  position: relative;
+  display: inline-block;
+  width: 40px;
+  height: 24px;
+}
+.switch input {
+  opacity: 0;
+  width: 0;
+  height: 0;
+}
+.slider {
+  position: absolute;
+  cursor: pointer;
+  top: 0;
+  left: 0;
+  right: 0;
+  bottom: 0;
+  background-color: #ccc;
+  -webkit-transition: 0.4s;
+  transition: 0.4s;
+}
+.slider:before {
+  position: absolute;
+  content: "";
+  height: 17px;
+  width: 16px;
+  left: 3px;
+  bottom: 4px;
+  background-color: white;
+  -webkit-transition: 0.4s;
+  transition: 0.4s;
+}
+input:checked + .slider {
+  background-color: #2196f3;
+}
+input:focus + .slider {
+  box-shadow: 0 0 1px #2196f3;
+}
+input:checked + .slider:before {
+  -webkit-transform: translateX(18px);
+  -ms-transform: translateX(18px);
+  transform: translateX(18px);
+}
+/* Rounded sliders */
+.slider.round {
+  border-radius: 34px;
+}
+.slider.round:before {
+  border-radius: 50%;
 }
 
 /** Responsive style for overall game module **/
@@ -145,6 +295,9 @@ button {
   align-items: center;
   justify-content: center;
   color: var(--black);
+}
+.dark-mode .letter {
+  color: #fff;
 }
 
 /** Styles for keyboard **/

@@ -353,6 +353,13 @@ class ScreenController {
     this.keyButtons = document.querySelectorAll(".key");
     this.gameController = gameControllerInput;
     this.toast = document.querySelector(".toast");
+    this.info = document.querySelector(".info");
+    this.infoModal = document.querySelector(".info-modal");
+    this.setting = document.querySelector(".setting");
+    this.settingModal = document.querySelector(".setting-modal");
+    this.exitList = document.querySelectorAll(".exit");
+    this.switch = document.querySelector('.switch input[type="checkbox"]');
+    this.checked = false;
   }
   // Pass in a boolean that loads the appropriate toast
   setToast(hasWon) {
@@ -411,9 +418,8 @@ class ScreenController {
       }
     }
   }
-  // Add Event Listener to body for user events and hand to Controller for Game Logic
-  listen() {
-    // Listen to keyboard events and check if game is over
+  // Function for an event listener for keyboard
+  listenToKeyboard() {
     this.body.addEventListener("keydown", ({ key, preventDefault }) => {
       // Make sure game is still running before processing events
       if (this.gameController.getIsGameRunning()) {
@@ -435,7 +441,9 @@ class ScreenController {
         }
       }
     });
-    // Listen to button events and check if game is over
+  }
+  // Function for an event listener for the .key buttons
+  listenToButtons() {
     this.keyButtons.forEach((key) => {
       key.addEventListener("click", () => {
         // Make sure game is still running before processing events
@@ -458,6 +466,50 @@ class ScreenController {
           }
         }
       });
+    });
+  }
+  // Pop out the modal that tells user how to play the game
+  makeInfoModal() {
+    this.infoModal.style.display = "block";
+    this.exitList[0].addEventListener("click", () => {
+      this.infoModal.style.display = "none";
+    });
+  }
+  checkDarkMode = () => {
+    this.checked = this.checked ? false : true;
+    if (this.checked) {
+      console.log("i did something checked");
+      this.body.classList.add("dark-mode");
+    } else {
+      console.log("i did something not checked");
+      this.body.classList.remove("dark-mode");
+    }
+  };
+  // Pop out the modal for dark mode setting
+  makeSettingModal() {
+    this.settingModal.style.display = "block";
+    this.exitList[1].addEventListener("click", () => {
+      this.settingModal.style.display = "none";
+      console.log("I removed something!");
+      this.switch.removeEventListener("change", this.checkDarkMode);
+    });
+    // Add dark mode functionality
+    console.log(this.checked);
+    this.switch.addEventListener("change", this.checkDarkMode);
+  }
+  // Add Event Listener to body for user events and hand to Controller for Game Logic
+  listen() {
+    // Listen to keyboard events and check if game is over
+    this.listenToKeyboard();
+    // Listen to button events and check if game is over
+    this.listenToButtons();
+    // listen to info button
+    this.info.addEventListener("click", () => {
+      this.makeInfoModal();
+    });
+    // listen to setting button
+    this.setting.addEventListener("click", () => {
+      this.makeSettingModal();
     });
   }
 }
