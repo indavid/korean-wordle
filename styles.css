@@ -372,6 +372,10 @@ input:checked + .slider:before {
 @media (max-width: 420px) {
   body {
     --header-height: 50px;
+    overflow: hidden;
+    height: 100svh;
+    min-height: 100vh;
+    min-height: -webkit-fill-available;
   }
   header {
     justify-content: center;
@@ -387,9 +391,5 @@ input:checked + .slider:before {
   }
   header .right-icons {
     order: 3;
-  }
-  .board-module {
-    height: 400px;
-    flex-grow: 0;
   }
 }
