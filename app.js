@@ -397,6 +397,20 @@ class ScreenController {
       }
     }
   }
+  // Color keyboard based off of color of letter
+  colorKeyboard() {
+    const board = this.gameController.getBoard();
+    const styleBoard = this.gameController.getStyleBoard();
+    for (let i = 0; i < board.length; i++) {
+      for (let j = 0; j < board[i].length; j++) {
+        this.keyButtons.forEach((key) => {
+          if (key.innerText === board[i][j]) {
+            key.classList.add(styleBoard[i][j]);
+          }
+        });
+      }
+    }
+  }
   // Add Event Listener to body for user events and hand to Controller for Game Logic
   listen() {
     // Listen to keyboard events and check if game is over
@@ -405,6 +419,9 @@ class ScreenController {
       if (this.gameController.getIsGameRunning()) {
         this.gameController.handleEvent(key, preventDefault);
         this.renderBoard();
+        if (key === "Enter") {
+          this.colorKeyboard();
+        }
         if (!this.gameController.getIsGameRunning()) {
           if (this.gameController.getIsGameWon()) {
             setTimeout(() => {
@@ -425,6 +442,9 @@ class ScreenController {
         if (this.gameController.getIsGameRunning()) {
           this.gameController.handleEvent(key.innerText, null);
           this.renderBoard();
+          if (key.innerText === "ENTER") {
+            this.colorKeyboard();
+          }
           if (!this.gameController.getIsGameRunning()) {
             if (this.gameController.getIsGameWon()) {
               setTimeout(() => {
