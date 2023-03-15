@@ -77,27 +77,6 @@ button {
   margin: 0;
   padding: 0;
 }
-/** For mobile devices, change navbar style **/
-@media (max-width: 420px) {
-  body {
-    --header-height: 40px;
-  }
-  header {
-    justify-content: center;
-  }
-  header h1 {
-    text-align: left;
-    order: 1;
-    flex-grow: 2;
-  }
-  header .left-icons {
-    order: 2;
-    padding-right: 10px;
-  }
-  header .right-icons {
-    order: 3;
-  }
-}
 
 /** Styles for buttons **/
 /** INFO **/
@@ -386,5 +365,32 @@ input:checked + .slider:before {
   }
   100% {
     transform: scale(1);
+  }
+}
+
+/** For mobile devices,  **/
+@media (max-width: 420px) {
+  body {
+    --header-height: 50px;
+  }
+  header {
+    justify-content: center;
+  }
+  header h1 {
+    text-align: left;
+    order: 1;
+    flex-grow: 2;
+  }
+  header .left-icons {
+    order: 2;
+    padding-right: 10px;
+  }
+  header .right-icons {
+    order: 3;
+  }
+  .board-module {
+    height: 390px;
+    width: 330px;
+    flex-grow: 0;
   }
 }
