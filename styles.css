@@ -389,8 +389,7 @@ input:checked + .slider:before {
     order: 3;
   }
   .board-module {
-    height: 390px;
-    width: 330px;
+    height: 400px;
     flex-grow: 0;
   }
 }
