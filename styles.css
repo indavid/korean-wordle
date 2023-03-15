@@ -370,11 +370,14 @@ input:checked + .slider:before {
 
 /** For mobile devices,  **/
 @media (max-width: 420px) {
+  html {
+    height: -webkit-fill-available;
+  }
   body {
     --header-height: 50px;
-    height: 100svh;
-    height: 100vh;
-    height: -webkit-fill-available;
+    min-height: 100vh;
+    /* mobile viewport bug fix */
+    min-height: -webkit-fill-available;
   }
   header {
     justify-content: center;
