@@ -324,6 +324,7 @@ input:checked + .slider:before {
   font-family: vars(--sans);
   font-weight: bold;
   text-align: center;
+  touch-action: manipulation;
 }
 .func {
   width: calc(76.5% / 7);
