@@ -11,6 +11,7 @@
   --font-size: 1rem;
   --serif: "Ultra", "Noto Serif KR", "Times New Roman", serif;
   --sans: "Helvetica Neue", "Helvetica", "Arial", sans-serif;
+  --header-height: 65px;
 }
 html {
   box-sizing: border-box;
@@ -27,6 +28,7 @@ body {
   background-color: var(--white);
   font-size: var(--font-size);
   overflow-x: hidden;
+  height: 100vh;
 }
 
 /** Styling for dark mode **/
@@ -45,7 +47,7 @@ header {
   display: flex;
   flex-direction: row;
   flex-wrap: nowrap;
-  height: 65px;
+  height: var(--header-height);
   justify-content: space-between;
   align-items: center;
   padding: 0 1rem;
@@ -77,6 +79,9 @@ button {
 }
 /** For mobile devices, change navbar style **/
 @media (max-width: 420px) {
+  body {
+    --header-height: 40px;
+  }
   header {
     justify-content: center;
   }
@@ -236,7 +241,7 @@ input:checked + .slider:before {
 .game-module {
   display: flex;
   flex-direction: column;
-  height: calc(100vh - 65px);
+  height: calc(100vh - var(--header-height));
   align-items: center;
   margin: 0 auto;
 }
