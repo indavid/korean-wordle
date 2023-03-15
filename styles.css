@@ -306,6 +306,7 @@ input:checked + .slider:before {
   flex-wrap: wrap;
   max-width: 550px;
   margin: 10px 3px;
+  touch-action: manipulation;
 }
 .row {
   display: flex;
@@ -324,7 +325,6 @@ input:checked + .slider:before {
   font-family: vars(--sans);
   font-weight: bold;
   text-align: center;
-  touch-action: manipulation;
 }
 .func {
   width: calc(76.5% / 7);
