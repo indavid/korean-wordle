@@ -372,10 +372,9 @@ input:checked + .slider:before {
 @media (max-width: 420px) {
   body {
     --header-height: 50px;
-    overflow: hidden;
     height: 100svh;
-    min-height: 100vh;
-    min-height: -webkit-fill-available;
+    height: 100vh;
+    height: -webkit-fill-available;
   }
   header {
     justify-content: center;
