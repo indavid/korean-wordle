@@ -375,9 +375,9 @@ input:checked + .slider:before {
   }
   body {
     --header-height: 50px;
-    min-height: 100vh;
     /* mobile viewport bug fix */
-    min-height: -webkit-fill-available;
+    height: 100%;
+    height: -webkit-fill-available;
   }
   header {
     justify-content: center;
